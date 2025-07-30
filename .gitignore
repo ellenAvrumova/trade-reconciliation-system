@@ -4,6 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+dump.rdb
+
 ### STS ###
 .apt_generated
 .classpath
