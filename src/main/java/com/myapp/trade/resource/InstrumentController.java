@@ -3,6 +3,7 @@ package com.myapp.trade.resource;
 import com.myapp.trade.domain.Instrument;
 import com.myapp.trade.repository.InstrumentRepository;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/instruments")
+@Tag(name = "Instruments")
 public class InstrumentController {
 
     private final InstrumentRepository instrumentRepository;

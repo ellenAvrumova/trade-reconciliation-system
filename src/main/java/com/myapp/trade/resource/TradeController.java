@@ -3,6 +3,7 @@ package com.myapp.trade.resource;
 import com.myapp.trade.domain.Trade;
 import com.myapp.trade.repository.TradeRepository;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/trades")  // base path for all endpoints in this controller
+@RequestMapping("/trades")
+@Tag(name = "Trades")
 public class TradeController {
 
     private final TradeRepository tradeRepository;
