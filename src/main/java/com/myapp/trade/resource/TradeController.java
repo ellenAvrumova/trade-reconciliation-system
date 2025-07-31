@@ -1,7 +1,7 @@
 package com.myapp.trade.resource;
 
 import com.myapp.trade.domain.Trade;
-import com.myapp.trade.repository.TradeRepository;
+import com.myapp.trade.service.TradeService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,54 +16,38 @@ import java.util.Optional;
 @Tag(name = "Trades")
 public class TradeController {
 
-    private final TradeRepository tradeRepository;
+    private final TradeService tradeService;
 
     @Autowired
-    public TradeController(TradeRepository tradeRepository) {
-        this.tradeRepository = tradeRepository;
+    public TradeController(TradeService tradeService) {
+        this.tradeService = tradeService;
     }
 
     @GetMapping
-    public List<Trade> getAllTrades() {
-        return tradeRepository.findAll();
+    public ResponseEntity<List<Trade>> getAllTrades() {
+        return ResponseEntity.ok(tradeService.getAllTrades());
     }
 
-    @GetMapping("/tradeId/{tradeId}")
-    public List<Trade> getTradesByTradeId(@PathVariable String tradeId) {
-        return tradeRepository.findByTradeId(tradeId);
+    @GetMapping("/{id}")
+    public Trade getTradeById(@PathVariable Long id) {
+        return tradeService.getTradeById(id).get();
     }
 
     @PostMapping
-    public Trade createTrade(@RequestBody Trade trade) {
-        return tradeRepository.save(trade);
+    public ResponseEntity<Trade> createTrade(@RequestBody Trade trade) {
+        Trade createdTrade = tradeService.createTrade(trade);
+        return ResponseEntity.ok(createdTrade);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Trade> updateTrade(@PathVariable Long id, @RequestBody Trade tradeDetails) {
-        Optional<Trade> tradeOpt = tradeRepository.findById(id);
-        if (tradeOpt.isPresent()) {
-            Trade trade = tradeOpt.get();
-            trade.setTradeId(tradeDetails.getTradeId());
-            trade.setInstrument(tradeDetails.getInstrument());
-            trade.setQuantity(tradeDetails.getQuantity());
-            trade.setPrice(tradeDetails.getPrice());
-            trade.setTradeDate(tradeDetails.getTradeDate());
-            trade.setSourceSystem(tradeDetails.getSourceSystem());
-            Trade updatedTrade = tradeRepository.save(trade);
-            return ResponseEntity.ok(updatedTrade);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        Trade updatedTrade = tradeService.updateTrade(id, tradeDetails);
+        return ResponseEntity.ok(updatedTrade);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTrade(@PathVariable Long id) {
-        Optional<Trade> tradeOpt = tradeRepository.findById(id);
-        if (tradeOpt.isPresent()) {
-            tradeRepository.delete(tradeOpt.get());
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        tradeService.deleteTrade(id);
+        return ResponseEntity.noContent().build();
     }
 }
